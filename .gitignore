@@ -1,0 +1,5 @@
+﻿database/obj
+databases/sqlite_database/obj
+domain/obj
+domain/bin
+Tests/UnitTests/obj
