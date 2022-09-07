@@ -3,3 +3,8 @@ databases/sqlite_database/obj
 domain/obj
 domain/bin
 Tests/UnitTests/obj
+Tests/UnitTests/bin
+databases/sqlite_database/bin
+ConsoleApp1/obj
+ConsoleApp2/bin
+ConsoleApp2/obj
