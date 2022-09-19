@@ -13,25 +13,25 @@ namespace UnitTests
     {
         [TestCase(2)]
         [TestCase(5)]
+        [TestCase(10)]
         [TestCase(50)]
         [TestCase(1000)]
-        [TestCase(10000)]
         [TestCase(10000)]
         [TestCase(9000)]
         [TestCase(8000)]
         public void Sale_3for2_test(int countInArray)
         {
-            var _products = new (decimal Price, int Quanity)[countInArray];
+            var products = new (decimal Price, int Quanity)[countInArray];
 
             var rand = new Random();
             for (int i = 0; i < countInArray; i++)
-                _products[i] = ((rand.Next(10, 3000) / 10m, rand.Next(1, 30)));
+                products[i] = ((rand.Next(10, 10000) / 10m, rand.Next(1, 30)));
 
             var sw = new Stopwatch();
 
             sw.Start();
 
-            var resLinq = _products.GroupBy(x => x.Price)
+            var resLinq = products.GroupBy(x => x.Price)
                 .Aggregate(0m, (sum, nextValue) =>
                 {
                     var quantity = nextValue.Sum(n => n.Quanity);
@@ -45,7 +45,7 @@ namespace UnitTests
 
             var dict = new Dictionary<decimal, int>();
 
-            foreach (var product in _products)
+            foreach (var product in products)
             {
                 if (dict.ContainsKey(product.Price))
                     dict[product.Price] += product.Quanity;
@@ -64,8 +64,14 @@ namespace UnitTests
             sw.Stop();
             var timeDict = sw.ElapsedMilliseconds;
 
-            Assert.AreEqual(resDict, resLinq);
-            Assert.IsTrue(timeDict <= timeLinq);
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(resDict, resLinq);
+                Assert.IsTrue(timeDict <= timeLinq);
+                Assert.AreEqual(timeDict, timeLinq, "Время выполнения");
+
+                Assert.LessOrEqual(0, products.Length - products.GroupBy(x => x.Price).Count(), "Количество повторяющихся значений");
+            });
         }
     }
 }
